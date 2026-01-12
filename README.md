@@ -1,21 +1,15 @@
 # TIME: Temporally Intelligent Meta-reasoning Engine for Chronologically Aware Language Models (Training and Datasets)
 
-Reproducible training pipeline for TIME models across phases, with QLoRA finetuning and post-training FP8 conversion. This repo contains the Jupyter notebooks, scripts, and phase data splits used to recreate the paper’s training results.
+Reproducible training pipeline for TIME models across phases with QLoRA finetuning. This repo contains the Jupyter notebooks, scripts, and phase data splits used to recreate the paper’s training results.
 
 ---
 
 ## Installation
 
-Use Python 3.10+ and install:
+Use Python 3.12+ and install:
 
 ```bash
-pip install \
-  unsloth==2025.5.7 \
-  transformers==4.51.3 \
-  accelerate==1.7.0 \
-  numpy==1.26.4 \
-  llmcompressor==0.6.0 \
-  scipy==1.15.3
+pip install torch==2.9.1 unsloth==2025.12.8 transformers==4.57.3 accelerate==1.12.0 numpy==1.26.4 xformers==0.0.33.post2 scipy==1.16.3
 ````
 
 You’ll also want a Jupyter environment (e.g., `jupyter` or VS Code) to run the notebooks.
@@ -31,7 +25,6 @@ You’ll also want a Jupyter environment (e.g., `jupyter` or VS Code) to run the
 ├── Trainer-8B.ipynb
 ├── Trainer-14B.ipynb
 ├── Trainer-32B.ipynb
-├── convert_to_fp8.py
 ├── phase1.json
 ├── phase2.json
 ├── phase3.json
@@ -79,24 +72,15 @@ Inside each trainer:
 
 **Determinism**: Loss metrics match within **two decimal places** across supported hardware; expect small floating-point variations.
 
-### 3) FP8 conversion (dynamic e4m3)
-
-Once finetuning completes, quantize to FP8 with:
-
-```bash
-python Training/convert_to_fp8.py --model <path-or-hf-id-of-your-trained-model>
-```
-
-**Hardware requirement** for downstream FP8 inference with vLLM: NVIDIA GPU with **compute capability ≥ 8.9** (Ada, Hopper, Blackwell).
 
 ---
 
 ## Inference note (vLLM)
 
-While this repo focuses on training, our evaluations used `vllm==0.10.0` with FP8 decoding. Install it separately if you intend to run inference locally:
+While this repo focuses on training, our evaluations used `vllm==0.13.0`. Install it separately if you intend to run inference locally:
 
 ```bash
-pip install vllm==0.10.0
+pip install vllm==0.13.0
 ```
 
 ---
@@ -104,7 +88,7 @@ pip install vllm==0.10.0
 ## Reproducibility and limitations
 
 * All intermediate `.json` artifacts needed to resume the pipeline at any stage are included.
-* **No model checkpoints** are provided. The notebooks + exact configurations are sufficient to **recreate checkpoints faithfully**, matching trainer-side loss statistics within two decimals.
+* **No model checkpoints** are provided. The notebooks + exact configurations are sufficient to **recreate checkpoints faithfully**.
 * For evaluation seeds/statistics, see the TIMEBench repo (the judging/statistics scripts accept `--seed`).
 
 ---
@@ -113,5 +97,5 @@ pip install vllm==0.10.0
 
 * CPU: AMD Ryzen 9 7950X3D
 * RAM: 128GB DDR5
-* GPU: NVIDIA RTX 6000 Ada (48GB VRAM)
-* Driver/CUDA: 576.02 / CUDA 12.9
+* GPU: NVIDIA RTX Pro 6000 Blackwell (96GB VRAM)
+* Driver/CUDA: 582.08 / CUDA 13.0
