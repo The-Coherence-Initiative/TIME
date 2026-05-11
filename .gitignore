@@ -1,0 +1,17 @@
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+node_modules/
+.ipynb_checkpoints/
+wandb/
+outputs/
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.log
+dist/
+build/
